@@ -6,19 +6,21 @@ from os import system
 app = Flask(__name__)
 
 
-@app.route("/modbus/tcpip/writeHoldingRegister", methods=["POST"])
+@app.route("/modbus/tcpip/ReadHoldingRegister", methods=["POST"])
 def modbus():
     request_data = request.get_json()
     ip = request_data['IpAddress']
     try:
         client = ModbusTcpClient(ip)
         client.connect()
-        client.write_register(request_data['Address'], request_data['Value'])
+        input= client.read_input_registers(request_data['Address'])
         client.close()
-        return jsonify(True), 201
+        puerto=input.registers[0]
+           
+        return jsonify(format(puerto,'#08b')), 201
+    
     except:
-        print("An exception occurred")
-
+        print("no funciona")
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, )
