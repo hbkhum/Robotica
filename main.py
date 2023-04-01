@@ -6,16 +6,16 @@ from os import system
 app = Flask(__name__)
 
 
-@app.route("/modbus/tcpip/writeHoldingRegister", methods=["POST"])
+@app.route("/modbus/tcpip/ReadHoldingRegister", methods=["POST"])
 def modbus():
     request_data = request.get_json()
     ip = request_data['IpAddress']
     try:
         client = ModbusTcpClient(ip)
         client.connect()
-        client.write_register(request_data['Address'], request_data['Value'])
+        reg = client.read_holding_registers(request_data['Address'], 1)
         client.close()
-        return jsonify(True), 201
+        return jsonify(reg.registers[0]), 201
     except:
         print("An exception occurred")
 
