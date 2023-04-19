@@ -6,8 +6,8 @@ from os import system
 app = Flask(__name__)
 
 
-@app.route("/modbus/tcpip/ReadHoldingRegister", methods=["POST"])
-def modbus():
+@app.route("/modbus/tcpip/ReadInputs", methods=["POST"])
+def readInputs():
     request_data = request.get_json()
     ip = request_data['IpAddress']
     try:
