@@ -4,10 +4,9 @@ from os import system
 
 app = Flask(__name__)
 @app.route("/modbus/tcpip/writeCoils", methods=["POST"])
-def modbus():
+def writeCoils():
     request_data = request.get_json()
     ip = request_data['IpAddress']
-
     try:
         client = ModbusTcpClient(ip)
         client.connect()
