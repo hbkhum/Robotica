@@ -7,14 +7,13 @@ import json
 app = Flask(__name__)
 
 
-@app.route("/modbus/tcpip/Readoutput", methods=["POST"])
-def modbus():
+@app.route("/modbus/tcpip/ReadOutput", methods=["POST"])
+def readOutput():
     request_data = request.get_json()
     ip = request_data['IpAddress']
     try:
         client = ModbusTcpClient(ip)
         client.connect()
-        #client.write_register(128,19)
         r = client.read_coils(136,8)
         client.close()
         return jsonify(r.bits), 201
