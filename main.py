@@ -4,13 +4,14 @@ from os import system
 
 app = Flask(__name__)
 
+
 ##Alejandro
 @app.route("/modbus/tcpip/ReadInput", methods=["POST"])
-def readInputs():
+def readInput():
     request_data = request.get_json()
     ip = request_data['IpAddress']
-    pin= int(request_data['Pin'])
-    pin = 2**(8-(9-pin))
+    pin = int(request_data['Pin'])
+    pin = 2 ** (8 - (9 - pin))
     try:
         client = ModbusTcpClient(ip)
         client.connect()
@@ -22,6 +23,7 @@ def readInputs():
     except:
         print("no funciona")
 
+
 ##Alberto
 @app.route("/modbus/tcpip/ReadInputs", methods=["POST"])
 def readInputs():
@@ -30,13 +32,14 @@ def readInputs():
     try:
         client = ModbusTcpClient(ip)
         client.connect()
-        input= client.read_input_registers(int(request_data['Address']))
+        input = client.read_input_registers(int(request_data['Address']))
         client.close()
-        puerto=input.registers[0]  
-        return jsonify(format(puerto,'#08b')), 201
-    
+        puerto = input.registers[0]
+        return jsonify(format(puerto, '#08b')), 201
+
     except:
         print("no funciona")
+
 
 ##Sergio
 @app.route("/modbus/tcpip/ReadOutput", methods=["POST"])
@@ -46,11 +49,12 @@ def readOutput():
     try:
         client = ModbusTcpClient(ip)
         client.connect()
-        r = client.read_coils(int(request_data['Address']),8)
+        r = client.read_coils(int(request_data['Address']), 8)
         client.close()
         return jsonify(r.bits), 201
     except:
         print("An exception occurred")
+
 
 ##Eduardo
 @app.route("/modbus/tcpip/WriteCoils", methods=["POST"])
@@ -61,13 +65,14 @@ def writeCoils():
     try:
         client = ModbusTcpClient(ip)
         client.connect()
-        #v = [False,True,False,True,False,True,True,True]
-        client.write_coils(int(request_data['Address']),v)
+        # v = [False,True,False,True,False,True,True,True]
+        client.write_coils(int(request_data['Address']), v)
         ##r = client.read_coils(136,8)
         client.close()
         return jsonify(True), 201
     except:
         print("An exception occurred")
+
 
 ##Cristian
 @app.route("/modbus/tcpip/ReadHoldingRegister", methods=["POST"])
@@ -83,21 +88,22 @@ def readHoldingRegister():
     except:
         print("An exception occurred")
 
+
 ##Alexis
 @app.route("/modbus/tcpip/WriteHoldingRegister", methods=["POST"])
 def writeHoldingRegister():
-    request_data = request.get_json() # Obtiene los datos enviados en la solicitud POST en formato JSON
-    ip = request_data['IpAddress'] #Almacena el valor en la variable ip
+    request_data = request.get_json()  # Obtiene los datos enviados en la solicitud POST en formato JSON
+    ip = request_data['IpAddress']  # Almacena el valor en la variable ip
     try:
-        client = ModbusTcpClient(ip) # Crea una conexión con el dispositivo Modbus a través de la dirección IP
-        client.connect() #Inicia la conexion
-        client.write_register(int(request_data['Address']), int(request_data['Value']),)
+        client = ModbusTcpClient(ip)  # Crea una conexi?n con el dispositivo Modbus a trav?s de la direcci?n IP
+        client.connect()  # Inicia la conexion
+        client.write_register(int(request_data['Address']), int(request_data['Value']), )
         # Escribe los valores el registro, las direccion y el valor es pedido mediante dos variables que se obtienen
         # por medio de postman Address (la direccion del registro), Value (el valor que se quiere escribir)
-        client.close() # Cierra la conexión con el dispositivo Modbus
-        return jsonify(True), 201 # Devuelve una respuesta JSON con un valor booleano "True"
+        client.close()  # Cierra la conexi?n con el dispositivo Modbus
+        return jsonify(True), 201  # Devuelve una respuesta JSON con un valor booleano "True"
     except:
-        print("An exception occurred") #Si ocurre una excepción, imprime un mensaje de error en la consola
+        print("An exception occurred")  # Si ocurre una excepci?n, imprime un mensaje de error en la consola
 
 
 if __name__ == '__main__':
